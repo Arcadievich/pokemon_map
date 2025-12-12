@@ -1,8 +1,10 @@
-from django.db import models  # noqa F401
+from django.db import models
 
-# your models here
+
 class Pokemon(models.Model):
     title = models.TextField()
+    title_en = models.CharField(blank=True)
+    title_jp = models.CharField(blank=True)
     description = models.TextField(blank=True)
     image = models.ImageField(null=True, blank=True)
 
