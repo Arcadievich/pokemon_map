@@ -43,14 +43,14 @@ def show_all_pokemons(request):
             folium_map,
             pokemon_entity.lat,
             pokemon_entity.lon,
-            request.build_absolute_uri(f'media/{pokemon_entity.pokemon.image}')
+            request.build_absolute_uri(f'/media/{pokemon_entity.pokemon.image}')
         )
 
     pokemons_on_page = []
     for pokemon in pokemons:
         pokemons_on_page.append({
             'pokemon_id': pokemon.id,
-            'img_url': request.build_absolute_uri(f'media/{pokemon.image}'),
+            'img_url': request.build_absolute_uri(f'/media/{pokemon.image}'),
             'title_ru': pokemon.title,
         })
 
@@ -78,7 +78,8 @@ def show_pokemon(request, pokemon_id):
         'title_en': pokemon.title_en,
         'title_jp': pokemon.title_jp,
         'img_url': request.build_absolute_uri(f'/media/{pokemon.image}'),
-        'description': pokemon.description
+        'description': pokemon.description,
+        'previous_evolution': pokemon.previous_evolution,
     }
 
     print(pokemon)
