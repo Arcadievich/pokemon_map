@@ -80,9 +80,8 @@ def show_pokemon(request, pokemon_id):
         'img_url': request.build_absolute_uri(f'/media/{pokemon.image}'),
         'description': pokemon.description,
         'previous_evolution': pokemon.previous_evolution,
+        'next_evolution': pokemon.next_evolution.first(),
     }
-
-    print(pokemon)
 
     return render(request, 'pokemon.html', context={
         'map': folium_map._repr_html_(), 'pokemon': pokemon
