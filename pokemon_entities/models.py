@@ -2,6 +2,7 @@ from django.db import models
 
 
 class Pokemon(models.Model):
+    """Модель Покемона."""
     title = models.TextField(verbose_name='Название')
     title_en = models.CharField(blank=True,verbose_name='Название на английском')
     title_jp = models.CharField(blank=True,verbose_name='Название на японском')
@@ -21,6 +22,7 @@ class Pokemon(models.Model):
 
 
 class PokemonEntity(models.Model):
+    """Модель уникального Покемона."""
     pokemon = models.ForeignKey(
         Pokemon,
         on_delete=models.CASCADE,

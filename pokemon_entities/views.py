@@ -17,6 +17,7 @@ DEFAULT_IMAGE_URL = (
 
 
 def add_pokemon(folium_map, lat, lon, image_url=DEFAULT_IMAGE_URL):
+    """Добавить покемона на карту."""
     icon = folium.features.CustomIcon(
         image_url,
         icon_size=(50, 50),
@@ -30,6 +31,7 @@ def add_pokemon(folium_map, lat, lon, image_url=DEFAULT_IMAGE_URL):
 
 
 def show_all_pokemons(request):
+    """Показать всех покемонов на карте."""
     local_time = localtime()
     pokemons = Pokemon.objects.all()
     pokemons_entities = PokemonEntity.objects.filter(
@@ -61,6 +63,7 @@ def show_all_pokemons(request):
 
 
 def show_pokemon(request, pokemon_id):
+    """Показать покемонов в шапке страницы."""
     pokemon = (Pokemon.objects.filter(id=pokemon_id))[0]
     pokemons_entities = PokemonEntity.objects.filter(pokemon=pokemon)
 
