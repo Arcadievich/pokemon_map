@@ -3,7 +3,7 @@ from django.db import models
 
 class Pokemon(models.Model):
     """Модель Покемона."""
-    title = models.TextField(verbose_name='Название')
+    title = models.CharField(verbose_name='Название')
     title_en = models.CharField(blank=True,verbose_name='Название на английском')
     title_jp = models.CharField(blank=True,verbose_name='Название на японском')
     description = models.TextField(blank=True,verbose_name='Описание')
@@ -13,7 +13,7 @@ class Pokemon(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='next_evolution',
+        related_name='next_evolutions',
         verbose_name='Из кого эволюционировал',
     )
 
@@ -26,6 +26,7 @@ class PokemonEntity(models.Model):
     pokemon = models.ForeignKey(
         Pokemon,
         on_delete=models.CASCADE,
+        related_name='pokemons',
         verbose_name='Покемон',
     )
     lat = models.FloatField(verbose_name='Широта')

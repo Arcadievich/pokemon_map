@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.utils.timezone import localtime
 from .models import Pokemon
 from .models import PokemonEntity
+from pogomap.settings import MEDIA_URL
 
 
 MOSCOW_CENTER = [55.751244, 37.618423]
@@ -45,14 +46,14 @@ def show_all_pokemons(request):
             folium_map,
             pokemon_entity.lat,
             pokemon_entity.lon,
-            request.build_absolute_uri(f'/media/{pokemon_entity.pokemon.image}')
+            request.build_absolute_uri(f'{MEDIA_URL}{pokemon_entity.pokemon.image}')
         )
 
     pokemons_on_page = []
     for pokemon in pokemons:
         pokemons_on_page.append({
             'pokemon_id': pokemon.id,
-            'img_url': request.build_absolute_uri(f'/media/{pokemon.image}'),
+            'img_url': request.build_absolute_uri(f'{MEDIA_URL}{pokemon.image}'),
             'title_ru': pokemon.title,
         })
 
@@ -65,7 +66,7 @@ def show_all_pokemons(request):
 def show_pokemon(request, pokemon_id):
     """Показать покемонов в шапке страницы."""
     pokemon = (Pokemon.objects.filter(id=pokemon_id))[0]
-    pokemons_entities = PokemonEntity.objects.filter(pokemon=pokemon)
+    pokemons_entities = pokemon.pokemons.all()
 
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     for pokemon_entity in pokemons_entities:
@@ -73,19 +74,25 @@ def show_pokemon(request, pokemon_id):
             folium_map,
             pokemon_entity.lat,
             pokemon_entity.lon,
-            f'media/{pokemon_entity.pokemon.image}',
+            request.build_absolute_uri(f'{MEDIA_URL}{pokemon_entity.pokemon.image}'),
         )
 
     pokemon = {
         'title_ru': pokemon.title,
         'title_en': pokemon.title_en,
         'title_jp': pokemon.title_jp,
-        'img_url': request.build_absolute_uri(f'/media/{pokemon.image}'),
+        'img_url': request.build_absolute_uri(f'{MEDIA_URL}{pokemon.image}'),
         'description': pokemon.description,
         'previous_evolution': pokemon.previous_evolution,
-        'next_evolution': pokemon.next_evolution.first(),
+        'next_evolution': pokemon.next_evolutions.first(),
     }
 
-    return render(request, 'pokemon.html', context={
-        'map': folium_map._repr_html_(), 'pokemon': pokemon
-    })
+    return render(
+        request,
+        'pokemon.html',
+        context={
+            'map': folium_map._repr_html_(),
+            'pokemon': pokemon,
+            'MEDIA_URL': MEDIA_URL,
+        }
+    )
