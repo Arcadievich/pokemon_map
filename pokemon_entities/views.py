@@ -3,6 +3,7 @@ import json
 
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from django.utils.timezone import localtime
 from .models import Pokemon
 from .models import PokemonEntity
@@ -65,7 +66,7 @@ def show_all_pokemons(request):
 
 def show_pokemon(request, pokemon_id):
     """Показать покемонов в шапке страницы."""
-    pokemon = (Pokemon.objects.filter(id=pokemon_id))[0]
+    pokemon = get_object_or_404(Pokemon, id=pokemon_id)
     pokemons_entities = pokemon.pokemons.all()
 
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
