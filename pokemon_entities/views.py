@@ -47,14 +47,14 @@ def show_all_pokemons(request):
             folium_map,
             pokemon_entity.lat,
             pokemon_entity.lon,
-            request.build_absolute_uri(f'{MEDIA_URL}{pokemon_entity.pokemon.image}')
+            pokemon_entity.pokemon.image.path
         )
 
     pokemons_on_page = []
     for pokemon in pokemons:
         pokemons_on_page.append({
             'pokemon_id': pokemon.id,
-            'img_url': request.build_absolute_uri(f'{MEDIA_URL}{pokemon.image}'),
+            'img_url': pokemon.image.url,
             'title_ru': pokemon.title,
         })
 
@@ -67,7 +67,7 @@ def show_all_pokemons(request):
 def show_pokemon(request, pokemon_id):
     """Показать покемонов в шапке страницы."""
     pokemon = get_object_or_404(Pokemon, id=pokemon_id)
-    pokemons_entities = pokemon.pokemons.all()
+    pokemons_entities = pokemon.entities.all()
 
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     for pokemon_entity in pokemons_entities:
@@ -75,14 +75,14 @@ def show_pokemon(request, pokemon_id):
             folium_map,
             pokemon_entity.lat,
             pokemon_entity.lon,
-            request.build_absolute_uri(f'{MEDIA_URL}{pokemon_entity.pokemon.image}'),
+            pokemon_entity.pokemon.image.path,
         )
 
     pokemon = {
         'title_ru': pokemon.title,
         'title_en': pokemon.title_en,
         'title_jp': pokemon.title_jp,
-        'img_url': request.build_absolute_uri(f'{MEDIA_URL}{pokemon.image}'),
+        'img_url': pokemon.image.url,
         'description': pokemon.description,
         'previous_evolution': pokemon.previous_evolution,
         'next_evolution': pokemon.next_evolutions.first(),
@@ -94,6 +94,5 @@ def show_pokemon(request, pokemon_id):
         context={
             'map': folium_map._repr_html_(),
             'pokemon': pokemon,
-            'MEDIA_URL': MEDIA_URL,
         }
     )
